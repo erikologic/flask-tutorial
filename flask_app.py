@@ -1,5 +1,5 @@
 # flask_app.py
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 import pandas as pd
 
 app = Flask(__name__)
@@ -11,11 +11,16 @@ def hello():
     return "Hello World!"
 
 
-data = pd.DataFrame({
-    'keys': ['a', 'b', 'c'],
-    'values': [1, 2, 3]
-})
+
 @app.route("/api")
-def my_api():
+def get_data():
+    data = pd.DataFrame({
+        'keys': ['a', 'b', 'c'],
+        'values': [1, 2, 3]
+    })
     return jsonify(data.to_dict(orient="records"))
 
+@app.route("/api", methods=["POST"])
+def post_data():
+    data = pd.DataFrame(request.get_json())
+    return jsonify(data.to_dict(orient="records"))
